@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c43af8d6fb337fb468442dc03cd6aab8, type: 3}
+  m_Name: Glock18
+  m_EditorClassIdentifier: Assembly-CSharp::ItemDefinition
+  id: 322b32b1-652a-4a34-b629-78c70163e27a
+  displayName: Glock 18
+  icon:
+    m_AssetGUID: 
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  worldPrefab:
+    m_AssetGUID: 0da1c1ea9f6f83b408b5d6f0e8d4be53
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  gridWidth: 2
+  gridHeight: 2
+  canRotate: 1
+  maxStack: 1
+  weightKg: 0.75
