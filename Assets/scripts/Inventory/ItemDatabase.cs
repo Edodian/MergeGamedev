@@ -1,76 +1,39 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
+/// Simple runtime DB for ItemDefinition.
+/// Loading strategy:
+/// 1) If 'items' list is set in the Inspector, uses that.
+/// 2) Else loads all ItemDefinition from Resources/Items (put your assets there).
 public class ItemDatabase : MonoBehaviour
 {
     public static ItemDatabase Instance { get; private set; }
 
-    [SerializeField] private string itemLabel = "ItemDefinitions";
+    [Tooltip("Optional: assign your ItemDefinition assets here. If empty, we'll try Resources/Items.")]
+    public List<ItemDefinition> items = new List<ItemDefinition>();
 
-    private readonly Dictionary<string, ItemDefinition> byId = new();
-    private AsyncOperationHandle<IList<ItemDefinition>> loadHandle;
-    public bool IsLoaded { get; private set; }
-    public event System.Action OnLoaded;
+    readonly Dictionary<string, ItemDefinition> _byId = new();
 
-    private void Awake()
+    void Awake()
     {
-        if (Instance && Instance != this) { Destroy(gameObject); return; }
+        if (Instance != null) { Destroy(gameObject); return; }
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        if (string.IsNullOrWhiteSpace(itemLabel))
+        if (items == null || items.Count == 0)
         {
-            Debug.LogError("ItemDatabase: itemLabel is empty. Set it to 'ItemDefinitions'.");
-            return;
+            var loaded = Resources.LoadAll<ItemDefinition>("Items");
+            items = new List<ItemDefinition>(loaded);
         }
 
-        // Optional pre-check: helps diagnose missing labels before load
-        var locs = Addressables.LoadResourceLocationsAsync(itemLabel);
-        locs.Completed += _ =>
+        _byId.Clear();
+        foreach (var it in items)
         {
-            if (locs.Status != AsyncOperationStatus.Succeeded || locs.Result == null || locs.Result.Count == 0)
-            {
-                Debug.LogError("ItemDatabase: no Addressables found for label '" + itemLabel +
-                               "'. Make sure your ItemDefinition assets are Addressable and have this label.");
-            }
-        };
-
-        // Load every ItemDefinition with that single label
-        loadHandle = Addressables.LoadAssetsAsync<ItemDefinition>(itemLabel, null);
-        loadHandle.Completed += OnItemsLoaded;
-    }
-
-    private void OnDestroy()
-    {
-        if (loadHandle.IsValid()) Addressables.Release(loadHandle);
-        if (Instance == this) Instance = null;
-    }
-
-    private void OnItemsLoaded(AsyncOperationHandle<IList<ItemDefinition>> op)
-    {
-        if (op.Status != AsyncOperationStatus.Succeeded)
-        {
-            Debug.LogError("ItemDatabase: Addressables load failed. Check labels on your ItemDefinition assets.");
-            return;
+            if (it == null || string.IsNullOrWhiteSpace(it.Id)) continue;
+            if (!_byId.ContainsKey(it.Id)) _byId.Add(it.Id, it);
         }
-
-        byId.Clear();
-        foreach (var def in op.Result)
-        {
-            if (def == null || string.IsNullOrEmpty(def.Id)) continue;
-            if (!byId.ContainsKey(def.Id)) byId.Add(def.Id, def);
-        }
-
-        if (byId.Count == 0)
-            Debug.LogWarning("ItemDatabase: 0 items loaded. Is the 'ItemDefinitions' label on the ItemDefinition asset (not just the prefab)?");
-
-        IsLoaded = true;
-        OnLoaded?.Invoke();
-        Debug.Log($"ItemDatabase: loaded {byId.Count} items.");
     }
 
-    public bool TryGet(string id, out ItemDefinition def) => byId.TryGetValue(id, out def);
-    public IEnumerable<ItemDefinition> AllItems() => byId.Values;
+    public bool TryGet(string id, out ItemDefinition def) => _byId.TryGetValue(id, out def);
+    public IEnumerable<ItemDefinition> AllItems() => items;
 }
