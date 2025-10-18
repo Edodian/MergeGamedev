@@ -7,8 +7,7 @@ public class InventoryToggle : MonoBehaviour
     public KeyCode key = KeyCode.Tab;
     public bool pauseWhileOpen = false;
 
-    UIDocument doc;
-    bool open;
+    UIDocument doc; bool open;
 
     void Awake()
     {
@@ -18,14 +17,14 @@ public class InventoryToggle : MonoBehaviour
 
     void Update()
     {
-        if (InputCompat.GetKeyDown(key))
-            Show(!open);
+        if (InputCompat.GetKeyDown(key)) Show(!open);
     }
 
     void Show(bool v)
     {
         open = v;
-        doc.rootVisualElement.style.display = v ? DisplayStyle.Flex : DisplayStyle.None;
+        var root = doc.rootVisualElement;
+        root.style.display = v ? DisplayStyle.Flex : DisplayStyle.None;
 
         UnityEngine.Cursor.visible = v;
         UnityEngine.Cursor.lockState = v ? CursorLockMode.None : CursorLockMode.Locked;

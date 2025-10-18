@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class WorldPickup : MonoBehaviour
 {
-    // ItemDefinition.Id to add when picked up
+    [Tooltip("ItemDefinition.Id to add when picked up")]
     public string itemId = "glock18_id";
     public int amount = 1;
 
-    // Optional: where we measure distance from (defaults to this transform)
+    [Tooltip("Point we aim at. Leave empty to use this transform.")]
     public Transform pivot;
 
     public static readonly HashSet<WorldPickup> All = new();
@@ -26,11 +26,10 @@ public class WorldPickup : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    // Just for level editing clarity
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere((pivot ? pivot : transform).position, 0.12f);
+        var p = pivot ? pivot : transform;
+        Gizmos.color = Color.yellow; Gizmos.DrawWireSphere(p.position, 0.12f);
     }
 #endif
 }

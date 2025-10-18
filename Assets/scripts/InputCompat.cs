@@ -14,6 +14,8 @@ public static class InputCompat
             KeyCode.Tab => k.tabKey.wasPressedThisFrame,
             KeyCode.R => k.rKey.wasPressedThisFrame,
             KeyCode.E => k.eKey.wasPressedThisFrame,
+            KeyCode.Delete => k.deleteKey.wasPressedThisFrame,
+            KeyCode.X => k.xKey.wasPressedThisFrame,
             _ => false
         };
 #else
