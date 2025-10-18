@@ -66,5 +66,9 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "GameJamTrnava2026.sln"
+    "dotnet.defaultSolution": "GameJamTrnava2026.slnx",
+    "editor.defaultFormatter": "HookyQR.beautify",
+    "[csharp]": {
+        "editor.defaultFormatter": "csharpier.csharpier-vscode"
+    }
 }

@@ -1,45 +1,49 @@
 using UnityEngine;
 using UnityEngine.Audio;
 using System.Collections.Generic;
+using UnityEngine.AddressableAssets;
 
 public class SoundManager : MonoBehaviour
 {
     private static SoundManager _instance;
-    public static SoundManager sndm
+public static SoundManager sndm
+{
+    get
     {
-        get
+        if (_instance == null)
         {
+            _instance = FindFirstObjectByType<SoundManager>();
+
             if (_instance == null)
             {
-
-                _instance = FindFirstObjectByType<SoundManager>();
-
-                if (_instance == null)
-                {
-                    GameObject prefab = Resources.Load<GameObject>("SoundManagerDB");
-                    if (prefab != null)
+                UnityEngine.AddressableAssets.Addressables
+                    .LoadAssetAsync<GameObject>("SoundManagerInstance")
+                    .Completed += handle =>
                     {
-                        GameObject instance = Instantiate(prefab);
-                        _instance = instance.GetComponent<SoundManager>();
-
-                        if (_instance == null)
+                        if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
                         {
-                            Debug.LogError("Soundmanager prefab does not contain sound manager class!");
+                            GameObject instance = Instantiate(handle.Result);
+                            _instance = instance.GetComponent<SoundManager>();
+
+                            if (_instance == null)
+                            {
+                                Debug.LogError("Soundmanager prefab does not contain sound manager class!");
+                            }
+                            else
+                            {
+                                Debug.Log("SoundManager prefab was successfully created via Addressables.");
+                            }
                         }
                         else
                         {
-                            Debug.Log("SoundManager prefab was successfully created.");
+                            Debug.LogError("Soundmanager prefab failed to load from Addressables!");
                         }
-                    }
-                    else
-                    {
-                        Debug.LogError("Soundmanager prefab does not exist or not found");
-                    }
-                }
+                    };
             }
-            return _instance;
         }
+        return _instance;
     }
+}
 
     public AudioMixerGroup mixerGroup;
 

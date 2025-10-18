@@ -7,19 +7,17 @@ using UnityEngine.UI;
 public class MainMenuScript : MonoBehaviour
 {
     public GameObject MainMenu;
+    public SceneReference NextScene;
     void Start()
     {
         MainMenu.SetActive(true);
-        SoundManager.sndm.StopAllSounds();
-        SoundManager.sndm.Play("MainTheme");
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        if(SoundManager.sndm==null){
+            StartCoroutine(WaitForSndmInit());
+        }else{
+            MenuInit();
+        }
     }
 
-    void Update()
-    {
-
-    }
     public void OpenMainMenu()
     {
         MainMenu.SetActive(true);
@@ -35,8 +33,21 @@ public class MainMenuScript : MonoBehaviour
     }
     public void BeginGame()
     {
-        SceneManager.LoadScene("Entry");
+        SceneManager.LoadScene(NextScene.SceneName);
     }
-
+    
+    private IEnumerator WaitForSndmInit()
+    {
+        while (SoundManager.sndm == null)
+        yield return null;
+        MenuInit();
+    }   
+    private void MenuInit()
+    {
+        SoundManager.sndm.StopAllSounds();
+        SoundManager.sndm.Play("MainTheme");
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
 }
 

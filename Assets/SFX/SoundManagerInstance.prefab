@@ -1,0 +1,159 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2655548271510844501
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4922497605145095818}
+  - component: {fileID: 4429107834875505979}
+  m_Layer: 0
+  m_Name: SoundManagerInstance
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4922497605145095818
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2655548271510844501}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4429107834875505979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2655548271510844501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3af5aaafd3c225042b6ba47505ec31f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mixerGroup: {fileID: 0}
+  MusicVolume: 0.5
+  AmbientVolume: 0.5
+  SoundVolume: 0.5
+  sounds:
+  - name: MainTheme
+    clip: {fileID: 8300000, guid: a2976e24dd4dd0e458406ac4484be3b3, type: 3}
+    volume: 0.214
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+    Music: 1
+    Sound: 0
+    Ambient: 0
+  - name: Yes
+    clip: {fileID: 8300000, guid: 27ea9a2a4c87ba14ab53ebe36213a9a6, type: 3}
+    volume: 1
+    volumeVariance: 0
+    pitch: 1.1
+    pitchVariance: 0
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+    Music: 0
+    Sound: 0
+    Ambient: 1
+  - name: No
+    clip: {fileID: 8300000, guid: 1e23ca72516c3ba4fb1a39097025305a, type: 3}
+    volume: 0.509
+    volumeVariance: 0.2
+    pitch: 1
+    pitchVariance: 0.1
+    loop: 1
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+    Music: 0
+    Sound: 0
+    Ambient: 1
+  - name: Click
+    clip: {fileID: 8300000, guid: 9ee1cb3810ab23a4c9a0fc463f628a8c, type: 3}
+    volume: 0.509
+    volumeVariance: 0.2
+    pitch: 1
+    pitchVariance: 0.25
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+    Music: 0
+    Sound: 0
+    Ambient: 0
+  - name: ScaleDown
+    clip: {fileID: 8300000, guid: a5e80c577698ace469ff64e2c3270c39, type: 3}
+    volume: 0.9
+    volumeVariance: 0.1
+    pitch: 1.1
+    pitchVariance: 0.1
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+    Music: 0
+    Sound: 1
+    Ambient: 0
+  - name: ScaleUp
+    clip: {fileID: 8300000, guid: 962ba194e26e6af44ad3caa4b0f7edbf, type: 3}
+    volume: 0.9
+    volumeVariance: 0.1
+    pitch: 1.1
+    pitchVariance: 0.1
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+    Music: 0
+    Sound: 1
+    Ambient: 0
+  - name: Metal1
+    clip: {fileID: 8300000, guid: 0ce82c3ea9e9f344385c9e511839b169, type: 3}
+    volume: 0.5
+    volumeVariance: 0.3
+    pitch: 1.1
+    pitchVariance: 0.25
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+    Music: 0
+    Sound: 0
+    Ambient: 1
+  - name: Metal2
+    clip: {fileID: 8300000, guid: 5f1f6949a15324544b150b39d894c999, type: 3}
+    volume: 0.5
+    volumeVariance: 0.3
+    pitch: 1.1
+    pitchVariance: 0.25
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+    Music: 0
+    Sound: 0
+    Ambient: 1
+  - name: MetalJump
+    clip: {fileID: 8300000, guid: 0f689501f63fc054bb2d9eef4b8c5d2a, type: 3}
+    volume: 0.5
+    volumeVariance: 0.3
+    pitch: 1.1
+    pitchVariance: 0.25
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+    Music: 0
+    Sound: 1
+    Ambient: 0
