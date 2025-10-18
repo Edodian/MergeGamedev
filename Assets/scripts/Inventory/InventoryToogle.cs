@@ -4,16 +4,32 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(UIDocument))]
 public class InventoryToggle : MonoBehaviour
 {
-    UIDocument doc;
-    bool visible = true;
+    public KeyCode key = KeyCode.Tab;
+    public bool pauseWhileOpen = false;
 
-    void Awake() { doc = GetComponent<UIDocument>(); }
+    UIDocument doc;
+    bool open;
+
+    void Awake()
+    {
+        doc = GetComponent<UIDocument>();
+        Show(false); // start closed
+    }
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            visible = !visible;
-            doc.rootVisualElement.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
-        }
+        if (InputCompat.GetKeyDown(key))
+            Show(!open);
+    }
+
+    void Show(bool v)
+    {
+        open = v;
+        doc.rootVisualElement.style.display = v ? DisplayStyle.Flex : DisplayStyle.None;
+
+        UnityEngine.Cursor.visible = v;
+        UnityEngine.Cursor.lockState = v ? CursorLockMode.None : CursorLockMode.Locked;
+
+        if (pauseWhileOpen) Time.timeScale = v ? 0f : 1f;
     }
 }

@@ -10,10 +10,10 @@ public class InventoryGridUI : MonoBehaviour
     [Header("Visuals")]
     public int cellSize = 64;
     public int cellGap = 2;
-    public Color cellColor = new Color(0.12f, 0.12f, 0.12f, 0.95f);
-    public Color lineColor = new Color(0.25f, 0.25f, 0.25f, 1f);
-    public Color ghostOk = new Color(0f, 1f, 0f, 0.25f);
-    public Color ghostBad = new Color(1f, 0f, 0f, 0.25f);
+    public Color cellColor = new Color(0.09f, 0.09f, 0.10f, 1f);
+    public Color lineColor = new Color(0.17f, 0.19f, 0.21f, 1f);
+    public Color ghostOk = new Color(0.25f, 0.9f, 0.45f, 0.25f);
+    public Color ghostBad = new Color(1f, 0.25f, 0.25f, 0.25f);
 
     UIDocument doc;
     VisualElement root, gridVE, ghost;
@@ -22,56 +22,106 @@ public class InventoryGridUI : MonoBehaviour
     readonly List<VisualElement> _tiles = new();
     int step => cellSize + cellGap;
 
-    // drag state
     bool dragging;
     int draggedIndex = -1;
     bool ghostRotated;
+    int hoverIndex = -1;
 
-    void Awake()
+    void OnEnable()
     {
         doc = GetComponent<UIDocument>();
         if (!grid) grid = FindObjectOfType<InventoryGridData>();
+        if (grid) grid.Changed += OnGridChanged;
 
-        root = doc.rootVisualElement;
-        root.style.flexDirection = FlexDirection.Column;
-        root.style.paddingLeft = 8;
-        root.style.paddingTop = 8;
+        root = doc ? doc.rootVisualElement : null;
+        if (root == null) return;
 
-        var header = new VisualElement { style = { flexDirection = FlexDirection.Row } };
-        var title = new Label("Inventory") { style = { unityFontStyleAndWeight = FontStyle.Bold, fontSize = 16, marginRight = 10 } };
-        weightLabel = new Label();
-        header.Add(title);
-        header.Add(weightLabel);
+        if (root.panel != null) SetupUI();
+        else root.RegisterCallback<AttachToPanelEvent>(_ => SetupUI());
+    }
 
-        gridVE = new VisualElement();
-        gridVE.style.position = Position.Relative;
-        gridVE.style.flexGrow = 0;
-        gridVE.style.flexShrink = 0;
-        gridVE.pickingMode = PickingMode.Position;
+    void OnDisable()
+    {
+        if (grid) grid.Changed -= OnGridChanged;
+        dragging = false; draggedIndex = -1; hoverIndex = -1;
+        ghost = null; gridVE = null; weightLabel = null;
+    }
 
-        root.Add(header);
-        root.Add(gridVE);
+    void OnGridChanged() => Refresh();
+
+    void SetupUI()
+    {
+        gridVE = root.Q<VisualElement>("GridRoot");
+        weightLabel = root.Q<Label>("WeightLabel");
+
+        if (gridVE == null)
+        {
+            Debug.LogError("InventoryGridUI: 'GridRoot' not found in UXML.");
+            return;
+        }
 
         root.RegisterCallback<PointerUpEvent>(_ => EndDragAndTryDrop());
         Refresh();
     }
 
+    // ---------- helpers ----------
+    Vector2 ContentOffset()
+    {
+        if (gridVE == null) return Vector2.zero;
+        var rs = gridVE.resolvedStyle;
+        return new Vector2(rs.borderLeftWidth + rs.paddingLeft,
+                           rs.borderTopWidth + rs.paddingTop);
+    }
+
+    // Convert mouse to grid-local coords with correct Y (top-left origin)
+    Vector2 MouseLocalInGrid()
+    {
+        // 1) Screen -> Panel units
+        var panelPt = RuntimePanelUtils.ScreenToPanel(root.panel, InputCompat.MousePosition());
+
+        // 2) Invert Y because Input uses bottom-left while panel uses top-left
+        float panelH = root.panel.visualTree.worldBound.height;
+        panelPt.y = panelH - panelPt.y;
+
+        // 3) Panel -> this element local
+        var local = gridVE.WorldToLocal(panelPt);
+
+        // 4) Subtract border/padding so (0,0) is first cell’s top-left
+        var off = ContentOffset();
+        local.x -= off.x;
+        local.y -= off.y;
+
+        // 5) Clamp to drawable content so last row/col are reachable
+        int W = grid.cellsWide * cellSize + (grid.cellsWide - 1) * cellGap;
+        int H = grid.cellsHigh * cellSize + (grid.cellsHigh - 1) * cellGap;
+        local.x = Mathf.Clamp(local.x, 0f, W - 0.0001f);
+        local.y = Mathf.Clamp(local.y, 0f, H - 0.0001f);
+
+        return local;
+    }
+
     void Update()
     {
-        if (!dragging || grid == null || draggedIndex < 0) return;
+        if (root == null || root.panel == null || gridVE == null || grid == null)
+            return;
 
-        // rotate ghost on R
-        if (Input.GetKeyDown(KeyCode.R))
+        // Rotate hovered (not dragging)
+        if (!dragging && hoverIndex >= 0 && InputCompat.GetKeyDown(KeyCode.R))
+        {
+            if (RotateIndex(hoverIndex)) Refresh();
+        }
+
+        if (!dragging || draggedIndex < 0) return;
+
+        // Rotate ghost while dragging
+        if (InputCompat.GetKeyDown(KeyCode.R))
         {
             var e = grid.items[draggedIndex];
             if (TryGetDef(e.itemId, out var def) && def.canRotate)
                 ghostRotated = !ghostRotated;
         }
 
-        // move ghost under mouse (panel space)
-        var panel = root.panel;
-        var mousePanel = RuntimePanelUtils.ScreenToPanel(panel, Input.mousePosition);
-        var local = mousePanel - gridVE.worldBound.position;
+        var local = MouseLocalInGrid();
 
         int cx = Mathf.FloorToInt(local.x / step);
         int cy = Mathf.FloorToInt(local.y / step);
@@ -79,6 +129,7 @@ public class InventoryGridUI : MonoBehaviour
         var e0 = grid.items[draggedIndex];
         TryGetDef(e0.itemId, out var d0);
         var sz = grid.GetSize(d0, ghostRotated);
+
         cx = Mathf.Clamp(cx, 0, Mathf.Max(0, grid.cellsWide - sz.w));
         cy = Mathf.Clamp(cy, 0, Mathf.Max(0, grid.cellsHigh - sz.h));
 
@@ -87,19 +138,23 @@ public class InventoryGridUI : MonoBehaviour
         bool can = grid.CanPlace(e0.itemId, cx, cy, ghostRotated, draggedIndex);
         ghost.style.backgroundColor = can ? ghostOk : ghostBad;
 
-        // fallback mouse-up check (in case events missed)
-        if (Input.GetMouseButtonUp(0)) EndDragAndTryDrop();
+        if (InputCompat.GetMouseButtonUp(0))
+            EndDragAndTryDrop();
     }
 
-    // ---------- UI build ----------
     public void Refresh()
     {
-        if (!grid) return;
+        if (gridVE == null || grid == null) return;
 
         _tiles.Clear();
         gridVE.Clear();
 
-        weightLabel.text = $"Weight: {grid.TotalWeight():0.##} / {(grid.maxWeightKg > 0 ? grid.maxWeightKg.ToString("0.##") : "∞")} kg";
+        // header weight
+        if (weightLabel != null)
+        {
+            var cap = grid.maxWeightKg > 0 ? grid.maxWeightKg.ToString("0.##") : "Unlimited";
+            weightLabel.text = $"Weight: {grid.TotalWeight():0.##} / {cap} kg";
+        }
 
         int W = grid.cellsWide * cellSize + (grid.cellsWide - 1) * cellGap;
         int H = grid.cellsHigh * cellSize + (grid.cellsHigh - 1) * cellGap;
@@ -107,22 +162,22 @@ public class InventoryGridUI : MonoBehaviour
         gridVE.style.width = W;
         gridVE.style.height = H;
         gridVE.style.backgroundColor = cellColor;
-        gridVE.style.borderBottomColor = lineColor;
-        gridVE.style.borderLeftColor = lineColor;
-        gridVE.style.borderRightColor = lineColor;
-        gridVE.style.borderTopColor = lineColor;
-        gridVE.style.borderBottomWidth = 1;
-        gridVE.style.borderLeftWidth = 1;
-        gridVE.style.borderRightWidth = 1;
-        gridVE.style.borderTopWidth = 1;
 
-        // draw grid lines (lightweight)
+        // remove built-in border (avoid 1px offset)
+        gridVE.style.borderTopWidth = 0;
+        gridVE.style.borderLeftWidth = 0;
+        gridVE.style.borderRightWidth = 0;
+        gridVE.style.borderBottomWidth = 0;
+
+        var off = ContentOffset();
+
+        // grid lines
         for (int x = 1; x < grid.cellsWide; x++)
         {
-            var v = new VisualElement();
+            var v = new VisualElement { pickingMode = PickingMode.Ignore };
             v.style.position = Position.Absolute;
-            v.style.left = x * step - (cellGap / 2f);
-            v.style.top = 0;
+            v.style.left = off.x + x * step - (cellGap / 2f);
+            v.style.top = off.y;
             v.style.width = cellGap;
             v.style.height = H;
             v.style.backgroundColor = lineColor;
@@ -130,10 +185,10 @@ public class InventoryGridUI : MonoBehaviour
         }
         for (int y = 1; y < grid.cellsHigh; y++)
         {
-            var h = new VisualElement();
+            var h = new VisualElement { pickingMode = PickingMode.Ignore };
             h.style.position = Position.Absolute;
-            h.style.left = 0;
-            h.style.top = y * step - (cellGap / 2f);
+            h.style.left = off.x;
+            h.style.top = off.y + y * step - (cellGap / 2f);
             h.style.width = W;
             h.style.height = cellGap;
             h.style.backgroundColor = lineColor;
@@ -147,32 +202,43 @@ public class InventoryGridUI : MonoBehaviour
             if (!TryGetDef(e.itemId, out var def)) continue;
 
             var sz = grid.GetSize(def, e.rotated);
-            var tile = CreateTile(def, e.amount, sz.w, sz.h);
+            var tile = CreateTile(def, e.amount);
             PlaceTile(tile, e.x, e.y, sz.w, sz.h);
+
             int capture = i;
-            tile.RegisterCallback<PointerDownEvent>(_ => BeginDrag(capture));
+
+            tile.RegisterCallback<PointerEnterEvent>(_ =>
+            {
+                hoverIndex = capture;
+                tile.AddToClassList("tile--hover");
+            });
+            tile.RegisterCallback<PointerLeaveEvent>(_ =>
+            {
+                if (hoverIndex == capture) hoverIndex = -1;
+                tile.RemoveFromClassList("tile--hover");
+            });
+            tile.RegisterCallback<PointerDownEvent>(evt =>
+            {
+                if (evt.button == 1)
+                {
+                    if (RotateIndex(capture)) Refresh();
+                    evt.StopImmediatePropagation();
+                    return;
+                }
+                BeginDrag(capture);
+                tile.AddToClassList("tile--active");
+            });
+
             gridVE.Add(tile);
             _tiles.Add(tile);
         }
     }
 
-    VisualElement CreateTile(ItemDefinition def, int amount, int w, int h)
+    VisualElement CreateTile(ItemDefinition def, int amount)
     {
         var tile = new VisualElement();
         tile.style.position = Position.Absolute;
-        tile.style.backgroundColor = new Color(1, 1, 1, 0.05f);
-        tile.style.borderTopLeftRadius = 4;
-        tile.style.borderTopRightRadius = 4;
-        tile.style.borderBottomLeftRadius = 4;
-        tile.style.borderBottomRightRadius = 4;
-        tile.style.borderTopWidth = 1;
-        tile.style.borderLeftWidth = 1;
-        tile.style.borderRightWidth = 1;
-        tile.style.borderBottomWidth = 1;
-        tile.style.borderTopColor = lineColor;
-        tile.style.borderLeftColor = lineColor;
-        tile.style.borderRightColor = lineColor;
-        tile.style.borderBottomColor = lineColor;
+        tile.AddToClassList("tile");
 
         var img = new Image { scaleMode = ScaleMode.ScaleToFit };
         img.image = def.icon ? def.icon.texture : null;
@@ -180,16 +246,10 @@ public class InventoryGridUI : MonoBehaviour
         img.style.height = new Length(100, LengthUnit.Percent);
         tile.Add(img);
 
-        // stack count badge
         var count = new Label();
         count.text = amount > 1 ? amount.ToString() : "";
+        count.AddToClassList("tile__badge");
         count.pickingMode = PickingMode.Ignore;
-        count.style.position = Position.Absolute;
-        count.style.bottom = 2; count.style.right = 4;
-        count.style.unityTextAlign = TextAnchor.MiddleRight;
-        count.style.fontSize = 12;
-        count.style.backgroundColor = new Color(0, 0, 0, 0.5f);
-        count.style.paddingLeft = 4; count.style.paddingRight = 4;
         tile.Add(count);
 
         return tile;
@@ -197,49 +257,50 @@ public class InventoryGridUI : MonoBehaviour
 
     void PlaceTile(VisualElement tile, int cx, int cy, int w, int h)
     {
-        tile.style.left = cx * step;
-        tile.style.top = cy * step;
+        var off = ContentOffset();
+        tile.style.left = off.x + cx * step;
+        tile.style.top = off.y + cy * step;
         tile.style.width = w * cellSize + (w - 1) * cellGap;
         tile.style.height = h * cellSize + (h - 1) * cellGap;
     }
 
-    // ---------- Drag ----------
     void BeginDrag(int index)
     {
-        if (index < 0 || index >= grid.items.Count) return;
+        if (index < 0 || index >= grid.items.Count || gridVE == null) return;
+
         dragging = true;
         draggedIndex = index;
-        ghostRotated = grid.items[index].rotated;
+        hoverIndex = index;
 
-        // build ghost tile
-        TryGetDef(grid.items[index].itemId, out var def);
+        var e = grid.items[index];
+        TryGetDef(e.itemId, out var def);
+        ghostRotated = e.rotated;
         var s = grid.GetSize(def, ghostRotated);
 
-        ghost = new VisualElement();
+        ghost = new VisualElement { pickingMode = PickingMode.Ignore };
         ghost.style.position = Position.Absolute;
         ghost.style.backgroundColor = ghostOk;
         ghost.style.opacity = 0.9f;
-        ghost.pickingMode = PickingMode.Ignore;
 
-        var img = new Image { scaleMode = ScaleMode.ScaleToFit };
-        img.image = def.icon ? def.icon.texture : null;
+        var img = new Image { scaleMode = ScaleMode.ScaleToFit, image = def.icon ? def.icon.texture : null };
         img.style.width = new Length(100, LengthUnit.Percent);
         img.style.height = new Length(100, LengthUnit.Percent);
         ghost.Add(img);
 
         gridVE.Add(ghost);
 
-        // hide original during drag
-        if (draggedIndex < _tiles.Count) _tiles[draggedIndex].style.display = DisplayStyle.None;
+        if (draggedIndex < _tiles.Count)
+            _tiles[draggedIndex].style.display = DisplayStyle.None;
 
-        // initial position
-        PositionGhost(grid.items[index].x, grid.items[index].y, s.w, s.h);
+        PositionGhost(e.x, e.y, s.w, s.h);
     }
 
     void PositionGhost(int cx, int cy, int w, int h)
     {
-        ghost.style.left = cx * step;
-        ghost.style.top = cy * step;
+        if (ghost == null) return;
+        var off = ContentOffset();
+        ghost.style.left = off.x + cx * step;
+        ghost.style.top = off.y + cy * step;
         ghost.style.width = w * cellSize + (w - 1) * cellGap;
         ghost.style.height = h * cellSize + (h - 1) * cellGap;
     }
@@ -248,21 +309,31 @@ public class InventoryGridUI : MonoBehaviour
     {
         if (!dragging) return;
 
-        // compute target cell under ghost
-        int cx = Mathf.RoundToInt(ghost.resolvedStyle.left / step);
-        int cy = Mathf.RoundToInt(ghost.resolvedStyle.top / step);
+        var off = ContentOffset();
+        float gx = ghost.resolvedStyle.left - off.x;
+        float gy = ghost.resolvedStyle.top - off.y;
 
-        var e = grid.items[draggedIndex];
-        bool ok = grid.TryMove(draggedIndex, cx, cy, ghostRotated);
+        int cx = Mathf.RoundToInt(gx / step);
+        int cy = Mathf.RoundToInt(gy / step);
+
+        var ok = grid.TryMove(draggedIndex, cx, cy, ghostRotated);
+
+        if (draggedIndex < _tiles.Count)
+            _tiles[draggedIndex].RemoveFromClassList("tile--active");
 
         dragging = false;
         draggedIndex = -1;
 
-        ghost.RemoveFromHierarchy();
+        ghost?.RemoveFromHierarchy();
         ghost = null;
 
         Refresh();
-        if (!ok) ; // (could flash red or play SFX)
+    }
+
+    bool RotateIndex(int idx)
+    {
+        if (grid.TryRotateInPlace(idx)) return true;
+        return grid.TryRotateOrRepack(idx);
     }
 
     bool TryGetDef(string id, out ItemDefinition def)

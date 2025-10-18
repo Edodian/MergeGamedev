@@ -26,6 +26,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - ItemDefinitions
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6f8c7a2b0d21f054c8ffa50ed7266e49
+    m_Address: Assets/UI/Inventory/Weapons/Icons/gloackRender.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: d649bcea733c1c142a5214b524997801, type: 2}
   m_SchemaSet:
