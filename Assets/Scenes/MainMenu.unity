@@ -315,6 +315,10 @@ PrefabInstance:
       value: PV test scene
       objectReference: {fileID: 0}
     - target: {fileID: 4877865145439746119, guid: d2f729fe9886dea439e7869eff8f2a2f, type: 3}
+      propertyPath: NextScene.SceneAsset
+      value: 
+      objectReference: {fileID: 102900000, guid: 92b689b6c63102c4e980eee97336b8dc, type: 3}
+    - target: {fileID: 4877865145439746119, guid: d2f729fe9886dea439e7869eff8f2a2f, type: 3}
       propertyPath: NextScene.sceneAsset
       value: 
       objectReference: {fileID: 102900000, guid: 92b689b6c63102c4e980eee97336b8dc, type: 3}
