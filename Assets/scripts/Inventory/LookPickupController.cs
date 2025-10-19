@@ -46,7 +46,11 @@ public class LookPickupController : MonoBehaviour
             if (dist > maxDistance) continue;
 
             Vector3 dir = to / (dist + 1e-6f);
+<<<<<<< HEAD
             float dot = Vector3.Dot(fwd, dir);      // 1 = dead center, 0 = 90ï¿½
+=======
+            float dot = Vector3.Dot(fwd, dir);      // 1 = dead center, 0 = 90°
+>>>>>>> main
 
             if (dot < cosThresh) continue;          // outside the cone
 
