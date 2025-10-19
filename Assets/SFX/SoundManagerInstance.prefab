@@ -123,7 +123,7 @@ MonoBehaviour:
     Ambient: 0
   - name: Metal1
     clip: {fileID: 8300000, guid: 0ce82c3ea9e9f344385c9e511839b169, type: 3}
-    volume: 0.5
+    volume: 0.4
     volumeVariance: 0.3
     pitch: 1.1
     pitchVariance: 0.25
@@ -135,7 +135,7 @@ MonoBehaviour:
     Ambient: 1
   - name: Metal2
     clip: {fileID: 8300000, guid: 5f1f6949a15324544b150b39d894c999, type: 3}
-    volume: 0.5
+    volume: 0.4
     volumeVariance: 0.3
     pitch: 1.1
     pitchVariance: 0.25
@@ -147,7 +147,31 @@ MonoBehaviour:
     Ambient: 1
   - name: MetalJump
     clip: {fileID: 8300000, guid: 0f689501f63fc054bb2d9eef4b8c5d2a, type: 3}
-    volume: 0.5
+    volume: 0.763
+    volumeVariance: 0.3
+    pitch: 1.1
+    pitchVariance: 0.25
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+    Music: 0
+    Sound: 1
+    Ambient: 0
+  - name: Jump
+    clip: {fileID: 8300000, guid: 8d5096bad82de4948927d3492bae936a, type: 3}
+    volume: 0.824
+    volumeVariance: 0.3
+    pitch: 1.1
+    pitchVariance: 0.25
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+    Music: 0
+    Sound: 1
+    Ambient: 0
+  - name: Landing
+    clip: {fileID: 8300000, guid: 0b97104edef830f4d81ed908b4d0a4ca, type: 3}
+    volume: 1
     volumeVariance: 0.3
     pitch: 1.1
     pitchVariance: 0.25

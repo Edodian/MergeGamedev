@@ -22,7 +22,12 @@ public class PlayerScript : MonoBehaviour
 
     void OnJump(InputValue value){
         if(value.isPressed){
-            FpController.AttemptJump();
+            FpController.AttemptJump?.Invoke();
+        }
+    }
+    void OnCrouch(InputValue value){
+        if(value.isPressed){
+            Activity.TryToggle(FpController.Crouch);
         }
     }
 
