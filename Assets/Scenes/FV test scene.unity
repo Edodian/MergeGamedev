@@ -191,7 +191,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 1.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2055266251}
   m_Father: {fileID: 1071355881}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &330585543
@@ -416,7 +417,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1071355881}
+    m_TransformParent: {fileID: 279451887}
     m_Modifications:
     - target: {fileID: 838870830255166293, guid: 0da1c1ea9f6f83b408b5d6f0e8d4be53, type: 3}
       propertyPath: m_IsActive
@@ -464,7 +465,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5885199259902895610, guid: 0da1c1ea9f6f83b408b5d6f0e8d4be53, type: 3}
       propertyPath: m_Constraints
-      value: 126
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5959159577234848819, guid: 0da1c1ea9f6f83b408b5d6f0e8d4be53, type: 3}
       propertyPath: m_IsActive
@@ -496,7 +497,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7280140154185534869, guid: 0da1c1ea9f6f83b408b5d6f0e8d4be53, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: -0.6
       objectReference: {fileID: 0}
     - target: {fileID: 7280140154185534869, guid: 0da1c1ea9f6f83b408b5d6f0e8d4be53, type: 3}
       propertyPath: m_LocalPosition.z
@@ -546,6 +547,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7945352812563076911, guid: 0da1c1ea9f6f83b408b5d6f0e8d4be53, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2055266256}
+    - targetCorrespondingSourceObject: {fileID: 7945352812563076911, guid: 0da1c1ea9f6f83b408b5d6f0e8d4be53, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2055266257}
   m_SourcePrefab: {fileID: 100100000, guid: 0da1c1ea9f6f83b408b5d6f0e8d4be53, type: 3}
 --- !u!1 &359399407
 GameObject:
@@ -1334,6 +1338,8 @@ GameObject:
   - component: {fileID: 1071355878}
   - component: {fileID: 1071355877}
   - component: {fileID: 1071355876}
+  - component: {fileID: 1071355882}
+  - component: {fileID: 1071355883}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1475,10 +1481,57 @@ Transform:
   m_Children:
   - {fileID: 279451887}
   - {fileID: 359399409}
-  - {fileID: 2055266251}
   - {fileID: 1342306828}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1071355882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1071355875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa72d6017f5b93f4e98f5a837cee7865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PistolEquipToggle
+  holsterAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Holster
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: fc237ebd-3569-4afa-87ee-a239c64b0ed8
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 47ff0235-9975-4f33-9dc5-0ad2651c1309
+        m_Path: <Keyboard>/h
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Holster
+        m_Flags: 0
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  grid: {fileID: 1141396519}
+  pistolItemId: glock18_id
+  handgunView: {fileID: 2055266250}
+--- !u!114 &1071355883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1071355875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2f7b4bf8b7807d4da545336e73a11e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCasting
+  toTarget: 0
 --- !u!1 &1141396517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1557,9 +1610,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandgunFire
   attackAction: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  handgun: {fileID: 0}
+  aimSource: {fileID: 0}
   anim: {fileID: 2055266256}
   fireAnim: HandgunFire
+  gunFire: {fileID: 0}
   fireInterval: 0.5
+  alignEachFrame: 1
+  alignSpeed: 20
+  rotationOffsetEuler: {x: 0, y: 0, z: 0}
+  ignoreCameraRoll: 1
 --- !u!4 &1342306828
 Transform:
   m_ObjectHideFlags: 0
@@ -1595,7 +1655,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1452758285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1943,6 +2003,44 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2055266257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055266250}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cec66e6ce7a0ef4f887fbe405b1dd68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PistolToggleSimple
+  holsterAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Holster
+      m_Type: 0
+      m_ExpectedControlType: Button
+      m_Id: 4458ad51-baba-4270-83cd-258b260e8a95
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: eb4f7164-146b-4471-9bf5-19e3b149da08
+        m_Path: <Keyboard>/h
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Holster
+        m_Flags: 0
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  anim: {fileID: 2055266256}
+  takeTrigger: Take
+  putTrigger: Put
+  takenStateName: PistolTaken
+  putterStateName: PistolPutter
+  startsEquipped: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
