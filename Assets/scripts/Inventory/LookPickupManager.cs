@@ -17,8 +17,8 @@ public class LookPickupManager : MonoBehaviour
     void Awake()
     {
         if (!cam) cam = Camera.main;
-        if (!grid) grid = FindObjectOfType<InventoryGridData>();
-        if (!ui) ui = FindObjectOfType<InventoryGridUI>();
+        if (!grid) grid = FindFirstObjectByType<InventoryGridData>(FindObjectsInactive.Exclude);
+        if (!ui) ui = FindFirstObjectByType<InventoryGridUI>(FindObjectsInactive.Exclude);
     }
 
     void Update()

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1dd33bef30e95d742a8bb9aa0d3abbf3
+guid: 6f8c7a2b0d21f054c8ffa50ed7266e49
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -45,7 +45,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 128
@@ -72,7 +72,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -139,9 +139,9 @@ TextureImporter:
       name: gloackRender_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 160
         y: 0
-        width: 540
+        width: 740
         height: 540
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -151,8 +151,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 722da879ce710804491950445b2b15f6
-      internalID: -1945545594
+      spriteID: d9de5cb2455854c48bcab20aae700d06
+      internalID: 1208793815
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 9060ce31b4f6c5049b639434dfdf5a66
+    spriteID: 26b1522c60b8b3d4586ccdcd9469332b
     internalID: 0
     vertices: []
     indices: 
@@ -171,9 +171,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":540.0,"y":540.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":960.0,"y":540.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      gloackRender_0: -1945545594
+      gloackRender_0: 1208793815
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

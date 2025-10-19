@@ -24,12 +24,4 @@ public class WorldPickup : MonoBehaviour
             return itemId;
         }
     }
-
-#if UNITY_EDITOR
-    void OnDrawGizmosSelected()
-    {
-        var p = pivot ? pivot : transform;
-        Gizmos.color = Color.yellow; Gizmos.DrawWireSphere(p.position, 0.12f);
-    }
-#endif
 }

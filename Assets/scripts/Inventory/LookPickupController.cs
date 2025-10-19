@@ -5,7 +5,7 @@ public class LookPickupController : MonoBehaviour
     public Camera cam;
     public float maxDistance = 3f;     // how far you can pick
     public float viewAngle = 5f;       // half-cone angle in degrees (tighter = more precise)
-    public KeyCode interactKey = KeyCode.E;
+    public KeyCode interactKey = KeyCode.E; //kall
     public InventoryGridData grid;
 
     ItemPickupTarget current;
@@ -13,7 +13,7 @@ public class LookPickupController : MonoBehaviour
     void Awake()
     {
         if (!cam) cam = Camera.main;
-        if (!grid) grid = FindObjectOfType<InventoryGridData>();
+        if (!grid) grid = FindFirstObjectByType<InventoryGridData>(FindObjectsInactive.Exclude);
     }
 
     void Update()
@@ -68,7 +68,7 @@ public class LookPickupController : MonoBehaviour
         int left = grid.AddAuto(t.itemId, t.amount, allowRotate: true);
         if (left == 0)
         {
-            FindObjectOfType<InventoryGridUI>()?.Refresh();
+            FindFirstObjectByType<InventoryGridUI>(FindObjectsInactive.Exclude);
             Destroy(t.gameObject);
         }
         else

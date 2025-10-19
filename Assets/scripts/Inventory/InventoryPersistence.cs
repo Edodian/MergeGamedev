@@ -8,8 +8,8 @@ public class InventoryPersistence : MonoBehaviour
 
     void Awake()
     {
-        if (!grid) grid = FindObjectOfType<InventoryGridData>();
-        if (!ui) ui = FindObjectOfType<InventoryGridUI>();
+        if (!grid) grid = FindFirstObjectByType<InventoryGridData>(FindObjectsInactive.Exclude);
+        if (!ui) ui = FindFirstObjectByType<InventoryGridUI>(FindObjectsInactive.Exclude);
 
         if (PlayerPrefs.HasKey(saveKey))
         {

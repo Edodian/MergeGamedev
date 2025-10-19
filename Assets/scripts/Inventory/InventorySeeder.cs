@@ -8,7 +8,7 @@ public class InventorySeeder : MonoBehaviour
 
     void Start()
     {
-        if (!grid) grid = FindObjectOfType<InventoryGridData>();
+        if (!grid) grid = FindFirstObjectByType<InventoryGridData>(FindObjectsInactive.Exclude);
         if (!grid) { Debug.LogError("No InventoryGridData in scene"); return; }
 
         // 0) DB / Id sanity
@@ -52,7 +52,7 @@ public class InventorySeeder : MonoBehaviour
         }
 
         // 5) Refresh UI
-        var ui = FindObjectOfType<InventoryGridUI>();
+        var ui = FindFirstObjectByType<InventoryGridUI>(FindObjectsInactive.Exclude);
         ui?.Refresh();
     }
 }
