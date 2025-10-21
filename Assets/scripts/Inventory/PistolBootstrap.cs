@@ -8,11 +8,11 @@ public class PistolBootstrap : MonoBehaviour
 
     void Start()
     {
-        if (!grid) grid = FindObjectOfType<InventoryGridData>();
+        if (!grid) grid = FindFirstObjectByType<InventoryGridData>(FindObjectsInactive.Exclude);
         if (!grid) { Debug.LogError("No InventoryGridData in scene"); return; }
 
         int leftover = grid.AddAuto(pistolId, 1, true);
-        FindObjectOfType<InventoryGridUI>()?.Refresh();
+        FindFirstObjectByType<InventoryGridUI>(FindObjectsInactive.Exclude)?.Refresh();
         if (leftover > 0) Debug.LogWarning("No space for pistol.");
     }
 
@@ -21,7 +21,7 @@ public class PistolBootstrap : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
         {
             if (grid.AddAuto(pistolId, 1, true) == 0)
-                FindObjectOfType<InventoryGridUI>()?.Refresh();
+                FindFirstObjectByType<InventoryGridUI>(FindObjectsInactive.Exclude);
         }
     }
 }

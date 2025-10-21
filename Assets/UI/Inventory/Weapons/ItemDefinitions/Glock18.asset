@@ -19,5 +19,5 @@ MonoBehaviour:
   canRotate: 1
   maxStack: 1
   weightKg: 0.75
-  icon: {fileID: 1208793815, guid: 6f8c7a2b0d21f054c8ffa50ed7266e49, type: 3}
-  worldPrefab: {fileID: 0}
+  icon: {fileID: -1945545594, guid: 1dd33bef30e95d742a8bb9aa0d3abbf3, type: 3}
+  worldPrefab: {fileID: 7945352812563076911, guid: 0da1c1ea9f6f83b408b5d6f0e8d4be53, type: 3}

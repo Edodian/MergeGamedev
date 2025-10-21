@@ -8,7 +8,7 @@ public class InvBootstrap : MonoBehaviour
 
     void Start()
     {
-        if (!grid) grid = FindObjectOfType<InventoryGridData>();
+        if (!grid) grid = FindFirstObjectByType<InventoryGridData>(FindObjectsInactive.Exclude);
         if (!grid) return;
 
         foreach (var id in itemIds)
@@ -17,7 +17,7 @@ public class InvBootstrap : MonoBehaviour
             grid.AddAuto(id, 1, allowRotate: true);
         }
 
-        var ui = FindObjectOfType<InventoryGridUI>();
+        var ui = FindFirstObjectByType<InventoryGridUI>(FindObjectsInactive.Exclude);
         ui?.Refresh();
     }
 }

@@ -1,22 +1,25 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Inv/Item", fileName = "ItemDefinition")]
+[CreateAssetMenu(menuName = "Items/Item Definition", fileName = "NewItemDefinition")]
 public class ItemDefinition : ScriptableObject
 {
     [Header("Identity")]
-    public string Id = "item_id";
-    public string displayName = "Item";
+    public string Id;                 // used by DB lookups (match pickups)
+    public string displayName;
 
-    [Header("Grid size (cells)")]
+    [Header("Grid")]
     public int gridWidth = 1;
     public int gridHeight = 1;
     public bool canRotate = true;
+    public int maxStack = 1;
 
-    [Header("Stacking & weight")]
-    public int maxStack = 1;           // 1 = not stackable
-    public float weightKg = 1f;        // weight per single unit
+    [Header("Stats")]
+    public float weightKg = 1f;
 
-    [Header("Visual")]
-    public Sprite icon;                // used in UI
-    public GameObject worldPrefab;     // optional, for pickups
+    [Header("UI")]
+    public Sprite icon;
+
+    [Header("World")]
+    // Prefab to spawn when dropping from inventory (must have WorldPickup + Rigidbody)
+    public GameObject worldPrefab;
 }
