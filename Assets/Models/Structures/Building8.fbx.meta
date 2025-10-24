@@ -3,11 +3,21 @@ guid: 0bdc0b7ff2d61dc4e9c53bef73ad22ad
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Old Bricks
+    second: {fileID: 2100000, guid: 035b5cf45b9c046429b8ca170d979f89, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal
+    second: {fileID: 2100000, guid: 1b78245f33e6cca49a6ebcfcb19c0198, type: 2}
   materials:
-    materialImportMode: 2
-    materialName: 0
-    materialSearch: 1
+    materialImportMode: 1
+    materialName: 1
+    materialSearch: 2
     materialLocation: 0
   animations:
     legacyGenerateAnimations: 4

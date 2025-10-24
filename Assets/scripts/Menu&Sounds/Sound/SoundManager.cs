@@ -102,6 +102,21 @@ public static SoundManager sndm
             Debug.LogWarning("Sound: " + sound + " not found!");
         }
     }
+     public void PlayWithVolume(string sound, float relativeVolume)
+    {
+        if (soundDictionary.TryGetValue(sound, out SoundClass s))
+        {
+            s.source.pitch = s.pitch * UnityEngine.Random.Range(1f - s.pitchVariance / 2f, 1f + s.pitchVariance / 2f);
+            UpdateSourceVolume(s);
+            s.source.volume *= Mathf.Clamp01(relativeVolume);
+
+            s.source.Play();
+        }
+        else
+        {
+            Debug.LogWarning("Sound: " + sound + " not found!");
+        }
+    }
 
     public void Stop(string sound)
     {
